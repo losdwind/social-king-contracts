@@ -32,6 +32,7 @@ contract SocialKing is ERC1155 {
     address constant FUNCTION_CONSUMER = 0xe583bf9b1DF8De38794ca0f34eb1EC89118D4e00;
     uint256 public assetIndex;
     mapping(uint256 => Asset) public assets;
+    mapping(bytes32 => address) public authors;
     mapping(address => uint256[]) public userAssets;
     mapping(bytes32 => uint256) public txToAssetId;
     mapping(uint256 => uint256) public totalSupply;
@@ -134,19 +135,25 @@ contract SocialKing is ERC1155 {
         return assets[id].arTxId;
     }
 
-    function sendRequest(string[] calldata args) external {
+    function sendRequest(string[] memory args) external {
         bytes memory abiEncodedData = abi.encodeWithSignature(
             "sendRequest(string[],uint64,uint32)",
             args, // args,
             1234,
-            300000
+            30000000
         );
 
         // Call the sendRequest function
         (bool success, bytes memory returnData) = address(this).call(abiEncodedData);
 
-        require(success, "Call to sendRequest failed");
+        // require(success, "Call to sendRequest failed");
         // Optionally handle returnData here if needed
-        
+        if (success) {
+            bytes32 authorHash = keccak256(abi.encode(args[0]));
+            authors[authorHash] = address(0);
+        } else {
+            bytes32 authorHash = keccak256(abi.encode(args[0]));
+            authors[authorHash] = address(0);
+        }
     }
 }

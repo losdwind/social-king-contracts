@@ -29,7 +29,7 @@ task("functions-deploy-socialking", "Deploys the SocialKing contract")
     )
     await socialkingContract.deployTransaction.wait(networks[network.name].confirmations)
 
-    console.log("\nDeployed FunctionsConsumer contract to:", socialkingContract.address)
+    console.log("\nDeployed SocialKing contract to:", socialkingContract.address)
 
     if (network.name === "localFunctionsTestnet") {
       return
@@ -63,5 +63,5 @@ task("functions-deploy-socialking", "Deploys the SocialKing contract")
       console.log("\nScanner API key is missing. Skipping contract verification...")
     }
 
-    console.log(`\nFunctionsConsumer contract deployed to ${socialkingContract.address} on ${network.name}`)
+    console.log(`\nSocialKing contract deployed to ${socialkingContract.address} on ${network.name}`)
   })
