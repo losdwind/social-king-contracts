@@ -1,29 +1,15 @@
 const { types } = require("hardhat/config")
 const { networks } = require("../../networks")
-const fs = require("fs")
-const { Location, ReturnType, CodeLanguage } = require("@chainlink/functions-toolkit")
 
-task("functions-deploy-consumer", "Deploys the FunctionsConsumer contract")
+task("functions-deploy-socialking", "Deploys the SocialKing contract")
   .addOptionalParam("verify", "Set to true to verify contract", false, types.boolean)
   .setAction(async (taskArgs) => {
-    console.log(`Deploying FunctionsConsumer contract to ${network.name}`)
+    console.log(`Deploying SocialKing contract to ${network.name}`)
 
-    const functionsRouter = networks[network.name]["functionsRouter"]
-    const donIdBytes32 = hre.ethers.utils.formatBytes32String(networks[network.name]["donId"])
 
     console.log("\n__Compiling Contracts__")
     await run("compile")
 
-      // String containing the source code to be executed
-  const source = fs.readFileSync("./twitter-authentication.js").toString()
-  //source: fs.readFileSync("./API-request-example.js").toString(),
-  // Location of source code (only Inline is currently supported)
-  const codeLocation = Location.Inline
-
-  // Optional if secrets are expected in the sourceLocation of secrets (only Remote or DONHosted is supported)
-  const secretsLocation = Location.DONHosted
-
-    const overrides = {}
     // If specified, use the gas price from the network config instead of Ethers estimated price
     if (networks[network.name].gasPrice) {
       overrides.gasPrice = networks[network.name].gasPrice
@@ -33,17 +19,17 @@ task("functions-deploy-consumer", "Deploys the FunctionsConsumer contract")
       overrides.nonce = networks[network.name].nonce
     }
 
-    const consumerContractFactory = await ethers.getContractFactory("FunctionsConsumer")
-    const consumerContract = await consumerContractFactory.deploy(functionsRouter, donIdBytes32,source,codeLocation,secretsLocation,  overrides)
+    const socialkingContractFactory = await ethers.getContractFactory("SocialKing")
+    const socialkingContract = await socialkingContractFactory.deploy()
 
     console.log(
       `\nWaiting ${networks[network.name].confirmations} blocks for transaction ${
-        consumerContract.deployTransaction.hash
+        socialkingContract.deployTransaction.hash
       } to be confirmed...`
     )
-    await consumerContract.deployTransaction.wait(networks[network.name].confirmations)
+    await socialkingContract.deployTransaction.wait(networks[network.name].confirmations)
 
-    console.log("\nDeployed FunctionsConsumer contract to:", consumerContract.address)
+    console.log("\nDeployed FunctionsConsumer contract to:", socialkingContract.address)
 
     if (network.name === "localFunctionsTestnet") {
       return
@@ -59,8 +45,8 @@ task("functions-deploy-consumer", "Deploys the FunctionsConsumer contract")
       try {
         console.log("\nVerifying contract...")
         await run("verify:verify", {
-          address: consumerContract.address,
-          constructorArguments: [functionsRouter, donIdBytes32,source,codeLocation,secretsLocation],
+          address: socialkingContract.address,
+          constructorArguments: [],
         })
         console.log("Contract verified")
       } catch (error) {
@@ -77,5 +63,5 @@ task("functions-deploy-consumer", "Deploys the FunctionsConsumer contract")
       console.log("\nScanner API key is missing. Skipping contract verification...")
     }
 
-    console.log(`\nFunctionsConsumer contract deployed to ${consumerContract.address} on ${network.name}`)
+    console.log(`\nFunctionsConsumer contract deployed to ${socialkingContract.address} on ${network.name}`)
   })

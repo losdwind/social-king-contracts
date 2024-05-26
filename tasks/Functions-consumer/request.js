@@ -190,11 +190,11 @@ task("functions-request", "Initiates an on-demand request from a Functions consu
       overrides.nonce = networks[network.name].nonce
     }
     const requestTx = await consumerContract.sendRequest(
-      requestConfig.source,
-      requestConfig.secretsLocation,
-      encryptedSecretsReference,
+      // requestConfig.source,
+      // requestConfig.secretsLocation,
+      // encryptedSecretsReference,
       requestConfig.args ?? [],
-      requestConfig.bytesArgs ?? [],
+      // requestConfig.bytesArgs ?? [],
       subscriptionId,
       callbackGasLimit,
       overrides
